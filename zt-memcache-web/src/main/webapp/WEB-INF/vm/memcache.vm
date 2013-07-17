@@ -1,0 +1,659 @@
+#set($layout = "/layout/default.vm") ##选择布局页面
+#set($page_title ="solrExample")
+#set($name = "solrExample")
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="utf-8">
+    <title>缓存管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid" id="swap">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+            <a class="brand" href="#">缓存管理</a>
+
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-user"></i> 张坦 <span
+                        class="caret"></span> </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#">个人管理</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">退出</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active">
+                        <a href="#" id="indexA">首页</a>
+                    </li>
+                    <li>
+                        <a href="#about" id="aboutUsA">关于我们</a>
+                    </li>
+
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid" id="solrContent">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                    <li class="nav-header">
+                        缓存管理相关功能
+                    </li>
+                    <li class="active" id="getAddressNav">
+                        <a href="#">memcache精准删除</a>
+                    </li>
+                    <li id="getCoordinateNav">
+                        <a href="#">分类删除</a>
+                    </li>
+                    <li id="addUserNav">
+                        <a href="#">memecache模糊删除</a>
+                    </li>
+                    <li id="searchMemNav">
+                        <a href="#">根据key模糊查询</a>
+                    </li>
+                    <li class="nav-header">
+                        缓存服务器配置
+                    </li>
+                    <li class="" id="setMemecacheServer">
+                        <a href="#">服务器管理</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.well -->
+        </div>
+        <!--/span-->
+
+
+        <div class="span4" id="content" style="overflow: hidden; position: relative;height: 400px;width: 500px">
+        ##        根据key精准删除缓存
+            <div class="hero-unit" id="getAddress" style="height: 380px">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li>
+                        <label>缓存key</label><input type="text" id="memKey">
+                    </li>
+                    <button type="button" id="delByKey" class="btn btn-primary" data-loading-text="删除中">删除
+                    </button>
+                </ul>
+            </div>
+
+        ##            分类删除
+            <div class="hero-unit" id="getCoordinate" style="height: 380px">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li>
+                        <label>账户id</label><input type="text" id="acc_id">
+                        <label>用户id</label><input type="text" id="usr_id">
+                        <label>删除类型</label>
+                        <select id="delType">
+                            <option value="sso_lockAcc_">锁定账号</option>
+                            <option value="userbase_usr_accinfo_">账户信息</option>
+                            <option value="userbase_usr_info_">用户基本信息</option>
+                            <option value="userbase_dealer_">代理商信息</option>
+                            <option value="userbase_usr_accexinfo_">账户扩展信息</option>
+                        </select>
+                    </li>
+                    <button type="button" id="getByCoordinateBtn" class="btn btn-primary" data-loading-text="删除中">删除
+                    </button>
+                </ul>
+
+            </div>
+
+        ##            模糊删除
+            <div class="hero-unit" id="addUserContent" style="height: 380px">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li>
+                        <label for="delLikeKey">缓存key中包含</label><input type="text" id="delLikeKey">
+                    </li>
+                    <button type="button" id="delByLikeBtn" class="btn btn-primary" data-loading-text="删除中">删除
+                    </button>
+                </ul>
+            </div>
+
+
+        ##            模糊查询
+            <div class="hero-unit" id="searcheLike" style="height: 380px">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li>
+                        <label for="searchLikeKey">缓存key中包含</label><input type="text" id="searchLikeKey">
+                    </li>
+                    <button type="button" id="searchKeyBtn" class="btn btn-primary" data-loading-text="查询中">查询
+                    </button>
+                </ul>
+            </div>
+
+
+        ##            添加服务器
+            <div class="hero-unit" id="addServerContent" style="height: 380px">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li>
+                        <label for="addServerIp">服务器地址</label><input type="text" id="addServerIp">
+                        <label for="addServerPort">服务器端口</label><input type="text" id="addServerPort">
+                    </li>
+                    <button type="button" id="addServerBtn" class="btn btn-primary" data-loading-text="添加中">添加
+                    </button>
+                    <button type="button" id="resetServerBtn" class="btn btn-primary" data-loading-text="重置中">重置
+                    </button>
+                </ul>
+
+
+            </div>
+        </div>
+    ##        上线滚动容器
+
+    ##   服务器结果区
+        <div class="span6" id="rsContent" style="display:none;margin-left: 200px">
+            <table class="table table-hover">
+                <caption><h4>当前服务器地址</h4></caption>
+                <thead>
+                <tr>
+                    <th>ip</th>
+                    <th>端口</th>
+                    <th>连接状态</th>
+                    <th>operation</th>
+                </tr>
+                </thead>
+                <tbody id="rs">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+##   缓存结果区
+    <div class="span6" id="memrsContent" style="display:none;margin-left: 200px">
+        <table class="table table-hover" style=" ">
+            <caption><h4>缓存信息</h4></caption>
+            <thead>
+            <tr>
+                <th>ip</th>
+                <th>端口</th>
+                <th>key</th>
+                <th>value</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="memrs">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>
+        &copy; zt集团 2013
+    </p>
+</footer>
+<!--/.fluid-container-->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap-transition.js"></script>
+<script src="js/bootstrap-alert.js"></script>
+<script src="js/bootstrap-modal.js"></script>
+<script src="js/bootstrap-dropdown.js"></script>
+<script src="js/bootstrap-scrollspy.js"></script>
+<script src="js/bootstrap-tab.js"></script>
+<script src="js/bootstrap-tooltip.js"></script>
+<script src="js/bootstrap-popover.js"></script>
+<script src="js/bootstrap-button.js"></script>
+<script src="js/bootstrap-collapse.js"></script>
+<script src="js/bootstrap-carousel.js"></script>
+<script src="js/bootstrap-typeahead.js"></script>
+<script src="js/jquery.scrollTo.js"></script>
+<script>
+
+
+jQuery(function ($) {
+##服务器列表查询结果json转换成html
+    var creatRsList = function (rs) {
+        $("#rsContent").fadeIn();
+        jQuery("#rs").empty();
+        var state = "";
+        jQuery.each(rs, function (i) {
+            jQuery("#rs").append("\<tr><td>" + rs[i].address + "\</td><td>" + rs[i].port + "\</td><td><span class=\"label server-status "+state+"\"\>testing<span>\</td><td><a href=\"#\"><i class=\"icon-trash delServerOne\"></i></a></td></tr>");
+        });
+        flushServerStatus();
+    };
+
+    var flushServerStatus = function(){
+        $(".server-status").each(function(){
+//            console.info($(this).html());
+            var ip = $(this).parents("tr").find("td").eq(0).html();
+            var port = $(this).parents("tr").find("td").eq(1).html();
+            showServerStatus(ip,port,this);
+        })
+    };
+
+
+    var showServerStatus = function(ip,port,that){
+        $.ajax({
+            async:true,
+            cache:false,
+            url:"checkPort?ip=" + ip + "&port=" + port,
+            type:'get',
+            dataType:'text',
+            success:function (data) {
+                if(data   == "0"){
+                    $(that).addClass("label-success");
+                    $(that).html("ok");
+                }else{
+                    $(that).addClass("label-important");
+                    $(that).html("wrong");
+                }
+                console.info("success");
+            },
+            error:function () {
+                console.info("error");
+                $(that).addClass("label-important");
+            }
+        });
+    }
+
+
+##缓存数据查询结果json转换成html
+    var creatMemRsList = function (rs) {
+        $("#memrsContent").fadeIn();
+        jQuery("#memrs").empty();
+        jQuery.each(rs, function (i) {
+        ##                    style='overflow:hidden;text-overflow:ellipsis;white-space:pre;'
+        ##                    <button type="button" id="resetServerBtn" class="btn btn-primary" data-loading-text="重置中">重置   </button>
+            var rskey = null;
+            if (rs[i].memKey == null) {
+                rskey = rs[i].memKey = "";
+            } else {
+                rskey = rs[i].memKey.substring(0, 50)
+            }
+            var rsValue = null;
+            if (rs[i].memValue == null) {
+                rsValue = rs[i].memValue = "";
+            } else {
+                rsValue = rs[i].memValue.substring(0, 50)
+            }
+
+            jQuery("#memrs").append("\<tr><td>" + rs[i].ip + "\</td><td>" + rs[i].port + "\</td><td>" + rskey + "\</td><td>" + rsValue + "\</td><td><a href=\"#\"><i class=\"icon-trash delMemRsOne\"></i></a></td></tr>");
+        });
+    };
+
+
+
+
+##                导航栏效果
+    $("#getAddressNav").click(function () {
+        jQuery("#rsContent").css("display", "none");
+        jQuery("#memrsContent").css("display", "none");
+        $("#content").scrollTo('#getAddress', 500);
+        $("#getCoordinateNav").removeClass("active");
+        $("#addUserNav").removeClass("active");
+        $("#searchUserNav").removeClass("active");
+        $("#setMemecacheServer").removeClass("active");
+        $("#searchMemNav").removeClass("active");
+        $("#getAddressNav").addClass("active");
+    });
+    $("#getCoordinateNav").click(function () {
+        jQuery("#rsContent").css("display", "none");
+        jQuery("#memrsContent").css("display", "none");
+        $("#content").scrollTo('#getCoordinate', 500);
+        $("#getAddressNav").removeClass("active");
+        $("#addUserNav").removeClass("active");
+        $("#searchUserNav").removeClass("active");
+        $("#setMemecacheServer").removeClass("active");
+        $("#searchMemNav").removeClass("active");
+        $("#getCoordinateNav").addClass("active");
+    });
+    $("#addUserNav").click(function () {
+        jQuery("#rsContent").css("display", "none");
+        jQuery("#memrsContent").css("display", "none");
+        $("#content").scrollTo('#addUserContent', 500);
+        $("#getAddressNav").removeClass("active");
+        $("#searchUserNav").removeClass("active");
+        $("#getCoordinateNav").removeClass("active");
+        $("#setMemecacheServer").removeClass("active");
+        $("#searchMemNav").removeClass("active");
+        $("#addUserNav").addClass("active");
+    });
+    $("#searchUserNav").click(function () {
+        jQuery("#rsContent").css("display", "none");
+        jQuery("#memrsContent").css("display", "none");
+        $("#content").scrollTo('#queryUserContent', 500);
+        $("#getAddressNav").removeClass("active");
+        $("#getCoordinateNav").removeClass("active");
+        $("#addUserNav").removeClass("active");
+        $("#setMemecacheServer").removeClass("active");
+        $("#searchMemNav").removeClass("active");
+        $("#searchUserNav").addClass("active");
+    });
+
+    //模糊查询页面
+    $("#searchMemNav").click(function () {
+        jQuery("#rsContent").css("display", "none");
+        jQuery("#memrsContent").css("display", "none");
+        $("#content").scrollTo('#searcheLike', 500);
+        $("#getAddressNav").removeClass("active");
+        $("#getCoordinateNav").removeClass("active");
+        $("#addUserNav").removeClass("active");
+        $("#setMemecacheServer").removeClass("active");
+        $("#searchUserNav").removeClass("active");
+        $("#searchMemNav").addClass("active");
+    });
+
+    //配置服务器
+    $("#setMemecacheServer").click(function () {
+        jQuery("#rsContent").css("display", "none");
+        jQuery("#memrsContent").css("display", "none");
+        $("#content").scrollTo('#addServerContent', 500);
+        $("#setMemecacheServer").addClass("active");
+        $("#getAddressNav").removeClass("active");
+        $("#getCoordinateNav").removeClass("active");
+        $("#addUserNav").removeClass("active");
+        $("#searchMemNav").removeClass("active");
+        $("#searchUserNav").removeClass("active");
+
+        //显示已经加入的服务器地址信息
+        $.ajax({
+            async:false,
+            cache:false,
+            url:"queryServer",
+            type:'get',
+            dataType:'json',
+            success:function (data) {
+                if (data != null && data.memcacheList != null) {
+                    creatRsList(data.memcacheList);
+                } else {
+                }
+
+            },
+            error:function () {
+            }
+        });
+    });
+
+
+
+##  模糊查询
+    $("#searchKeyBtn").click(function () {
+        var btn = $("#searchKeyBtn");
+        btn.button('loading');
+        var key = $("#searchLikeKey").val();
+        $.ajax({
+            async:false,
+            cache:false,
+            url:"queryByLike?key=" + key,
+            type:'get',
+            dataType:'json',
+            success:function (data) {
+                if (data != null && data.memDatLIst != null) {
+                    creatMemRsList(data.memDatLIst);
+                } else {
+                    jQuery("#memrs").empty();
+                }
+
+            },
+            error:function (data) {
+
+            }
+        });
+        btn.button('reset');//将按钮状态初始化到最初
+    });
+
+
+
+    //删除指定服务器
+    var delServerByIp = function (ip,port) {
+        $.ajax({
+            async:false,
+            cache:false,
+            url:"delServerByIp?ip=" + ip+"&port="+port,
+            type:'get',
+            dataType:'json',
+            success:function (data) {
+
+            },
+            error:function () {
+//
+            }
+        });//end ajax
+    };
+
+
+    //根据指定key删除缓存
+    var delMemByKey = function (memkey) {
+        $.ajax({
+            async:false,
+            cache:false,
+            url:"delBykey?key=" + memkey,
+            type:'get',
+            dataType:'json',
+            success:function (data) {
+
+            },
+            error:function () {
+//
+            }
+        });//end ajax
+        };
+
+
+    ##    根据分类删除缓存
+        $("#delByKey").click(function () {
+            var btn = $("#getByCoordinateBtn");
+            btn.button('loading');
+            var key = $("#memKey").val();
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"delBykey?key=" + key,
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+
+                },
+                error:function () {
+//
+                }
+            });
+            btn.button('reset');//将按钮状态初始化到最初
+        });
+
+        //http://localhost:8080/serachByGeo?lng=35.0752&lat=-97.032&distance=5000
+    ##                根据分类删除缓存
+        $("#getByCoordinateBtn").click(function () {
+            var btn = $("#getByCoordinateBtn");
+            btn.button('loading');
+            var pre = $("#delType").val();
+            var key = pre + $("#acc_id").val();
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"delBykey?key=" + key,
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+
+
+                },
+                error:function () {
+                }
+            });
+            btn.button('reset');//将按钮状态初始化到最初
+        });
+
+        //刷新服务器列表
+        var flushServerList = function () {
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"queryServer",
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+                    if (data != null && data.memcacheList != null) {
+                        creatRsList(data.memcacheList);
+                    } else {
+                        jQuery("#rs").empty();
+                    }
+
+                },
+                error:function () {
+                }
+            });
+        };
+
+        //刷新查询缓存结果列表
+        var flushMemSearchRs = function () {
+            var key = $("#searchLikeKey").val();
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"queryByLike?key=" + key,
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+                    if (data != null && data.memDatLIst != null) {
+                        creatMemRsList(data.memDatLIst);
+                    } else {
+                        jQuery("#memrs").empty();
+                    }
+
+                },
+                error:function (data) {
+
+                }
+            });
+        };
+
+
+
+    ##                模糊删除缓存
+        $("#delByLikeBtn").click(function () {
+            var btn = $("#getByCoordinateBtn");
+            btn.button('loading');
+            var key = $("#delLikeKey").val();
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"delByLike?key=" + key,
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+
+
+                },
+                error:function () {
+                }
+            });
+            btn.button('reset');//将按钮状态初始化到最初
+        });
+
+    ##                添加缓存服务器配置
+        $("#addServerBtn").click(function () {
+            var btn = $("#addServerBtn");
+            btn.button('loading');
+            var ip = $("#addServerIp").val();
+            var port = $("#addServerPort").val();
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"addServer?ip=" + ip + "&port=" + port,
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+
+                },
+                error:function () {
+                }
+            });
+            btn.button('reset');//将按钮状态初始化到最初
+            //刷新服务器列表
+            flushServerList();
+
+        });
+
+
+        //重置服务器设置
+        $("#resetServerBtn").click(function () {
+            var btn = $("#resetServerBtn");
+            btn.button('loading');
+            $.ajax({
+                async:false,
+                cache:false,
+                url:"resetServer",
+                type:'get',
+                dataType:'json',
+                success:function (data) {
+
+                },
+                error:function () {
+                }
+            });
+            btn.button('reset');//将按钮状态初始化到最初
+            //刷新服务器列表
+            flushServerList();
+
+        });
+
+        //删除查询缓存数据结果中的一条内容
+        $(".delMemRsOne").live("click", function () {
+            var key = $(this).parents("tr").find("td").eq(2).html();
+            delMemByKey(key);
+            flushMemSearchRs();
+        });
+
+
+    //删除配置中的指定服务器
+    $(".delServerOne").live("click", function () {
+        var ip = $(this).parents("tr").find("td").eq(0).html();
+        var port = $(this).parents("tr").find("td").eq(1).html();
+        delServerByIp(ip,port);
+        flushServerList();
+    });
+
+    });
+
+</script>
+</body>
+</html>

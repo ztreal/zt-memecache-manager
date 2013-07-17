@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 属性文件读入 -->
+    <context:property-placeholder location="classpath:solr-production.properties"/>
+    <!--<import resource="spring-domain.config-datasource-mongodb.xml" />-->
+
+    <!--<import resource="spring-config-datasource-${solr.jdbc.datasource.type}.xml"/>-->
+
+
+    <context:component-scan base-package="com.zt.memcache"/>
+
+
+    <!-- 解决字符串乱码 -->
+    <bean
+            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean
+                        class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="velocityConfig"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/vm/"/>
+        <property name="configLocation" value="classpath:velocity.properties"/>
+    </bean>
+
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="cache" value="false"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".vm"/>
+        <property name="toolboxConfigLocation" value="toolbox.xml"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="viewClass" value="com.zt.memcache.util.spring.VelocityToolsView"/>
+        <!--<property name="attributesMap">-->
+        <!--<map>-->
+        <!--&lt;!&ndash;Velocity Escape Tool&ndash;&gt;-->
+        <!--<entry key="esc"><bean class="org.apache.velocity.tools.generic.EscapeTool"/></entry>-->
+        <!--</map>-->
+        <!--</property>-->
+    </bean>
+    <!--<mvc:default-servlet-handler default-servlet-name=""/>-->
+    <!--<mvc:resources mapping="/img/**" location="/img/" cache-period="31556926"/>-->
+    <!--<mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>-->
+    <!--<mvc:resources mapping="/css/**" location="/css/" cache-period="31556926"/>-->
+    <!--<mvc:resources mapping="*" location="/WEB-INF/vm/" cache-period="31556926"/>-->
+
+    <!--<bean name = "memcachedClientBuilder" class = "net.rubyeye.xmemcached.XMemcachedClientBuilder">-->
+        <!--<constructor-arg>-->
+            <!--<list>-->
+                <!--<bean class="java.net.InetSocketAddress">-->
+                    <!--<constructor-arg value="${memcached.server1.host}"/>-->
+                    <!--<constructor-arg value="${memcached.server1.port}"/>-->
+                <!--</bean>-->
+                <!--<bean class="java.net.InetSocketAddress">-->
+                    <!--<constructor-arg value="${memcached.server2.host}"/>-->
+                    <!--<constructor-arg value="${memcached.server2.port}"/>-->
+                <!--</bean>-->
+            <!--</list>-->
+        <!--</constructor-arg>-->
+        <!--<constructor-arg>-->
+            <!--<list>-->
+                <!--<value>${memcached.server1.weight}</value>-->
+                <!--<value>${memcached.server2.weight}</value>-->
+            <!--</list>-->
+        <!--</constructor-arg>-->
+        <!--&lt;!&ndash;<property name="connectionPoolSize" value="${memcached.connectionpoolsize}"/>&ndash;&gt;-->
+        <!--<property name="commandFactory">-->
+            <!--<bean class="net.rubyeye.xmemcached.command.TextCommandFactory"/>-->
+        <!--</property>-->
+        <!--<property name="sessionLocator">-->
+            <!--<bean class="net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator"/>-->
+        <!--</property>-->
+        <!--<property name="transcoder">-->
+            <!--<bean class="net.rubyeye.xmemcached.transcoders.SerializingTranscoder"/>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="memcachedClient" name="memcachedClient" factory-bean="memcachedClientBuilder" factory-method="build" destroy-method="shutdown">-->
+    <!--</bean>-->
+
+    <!--<import resource="spring-domain.config-dao.xml" />-->
+
+
+    <bean name="memcacheList" class="java.util.ArrayList">
+        <constructor-arg>
+        <list>
+            <bean class="java.net.InetSocketAddress">
+                <constructor-arg value="${memcached.server1.host}"/>
+                <constructor-arg value="${memcached.server1.port}"/>
+            </bean>
+            <bean class="java.net.InetSocketAddress">
+                <constructor-arg value="${memcached.server2.host}"/>
+                <constructor-arg value="${memcached.server2.port}"/>
+            </bean>
+        </list>
+        </constructor-arg>
+    </bean>
+
+
+
+</beans>

@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>zt_memcache</artifactId>
+        <groupId>com.zt.memcache</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>com.zt.memcache</groupId>
+    <artifactId>zt-memcache-web</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>zt-memcache-web</name>
+    <packaging>war</packaging>
+    <url>http://memcache.uc.com</url>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>catalina</artifactId>
+            <version>6.0.37</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.1.33</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zt.memcache</groupId>
+            <artifactId>zt-memcache-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zt.memcache</groupId>
+            <artifactId>zt-memcache-service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zt.memcache</groupId>
+            <artifactId>zt-memcache-dao</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zt.memcache</groupId>
+            <artifactId>zt-memcache-domain</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.mina</groupId>-->
+        <!--<artifactId>mina-core</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--    <groupId>org.apache.mina</groupId>-->
+        <!--    <artifactId>mina-solr</artifactId>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>velocity-tools</groupId>-->
+        <!--<artifactId>velocity-tools</artifactId>-->
+        <!--<version>1.4</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>zt-memcache-web.war</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+    <profiles>
+        <profile>
+            <id>development</id>
+            <properties>
+                <spring.version>3.1.2.RELEASE</spring.version>
+                <!-- 开始 第一部分: 私密key配置，发布时需要运维配置，在product profile中去掉 -->
+                <!-- 结束 第一部分: 私密key配置，发布时需要运维配置，在product profile中去掉 -->
+
+                <!-- 开始 第二部分: 数据库配置，发布时需运维配置JNDI -->
+                <!--数据库连接的方式-->
+                <solr.jdbc.datasource.type>hsqldb</solr.jdbc.datasource.type>
+                <!--&lt;!&ndash; mongo数据源 &ndash;&gt;-->
+                <!--<mongo.connectionsPerHost>5</mongo.connectionsPerHost>-->
+                <!--<mongo.threadsAllowedToBlockForConnectionMultiplier>1000-->
+                <!--</mongo.threadsAllowedToBlockForConnectionMultiplier>-->
+                <!--<mongo.connectTimeout>2000</mongo.connectTimeout>-->
+                <!--<mongo.maxWaitTime>10</mongo.maxWaitTime>-->
+                <!--<mongo.autoConnectRetry>true</mongo.autoConnectRetry>-->
+                <!--<mongo.socketKeepAlive>fals</mongo.socketKeepAlive>-->
+                <!--<mongo.socketTimeout>2000</mongo.socketTimeout>-->
+                <!--<mongo.slaveOk>false</mongo.slaveOk>-->
+
+                <!--&lt;!&ndash; mysql &ndash;&gt;-->
+                <!--<solr.jdbc.driver>com.mysql.jdbc.Driver</solr.jdbc.driver>-->
+                <!--<solr.jdbc.url>jdbc:mysql://localhost:3306/ztsolr</solr.jdbc.url>-->
+                <!--<solr.jdbc.username>ztsolr</solr.jdbc.username>-->
+                <!--<solr.jdbc.password>ztsolr</solr.jdbc.password>-->
+
+                <!-- 结束 第二部分: 数据库配置，发布时需运维配置JNDI -->
+
+                <!-- 开始 第三部分: 缓存等服务资源，发布时需找运维确定 -->
+
+                <memcached.connectionpoolsize>2</memcached.connectionpoolsize>
+                <!--cache1位置-->
+                <memcached.server1.host>192.168.63.196</memcached.server1.host>
+                <memcached.server1.port>30000</memcached.server1.port>
+                <memcached.server1.weight>1</memcached.server1.weight>
+                <!--cache2位置-->
+                <memcached.server2.host>192.168.63.196</memcached.server2.host>
+                <memcached.server2.port>30001</memcached.server2.port>
+                <memcached.server2.weight>1</memcached.server2.weight>
+                <!-- 结束 第三部分: 缓存等服务资源，发布时需找运维确定 -->
+
+                <!-- 开始 第四部分: 服务器配置，发布时需找运维确定 -->
+                <solr.log.level>DEBUG</solr.log.level>
+                <solr.log.path>c:\solr\logs</solr.log.path>
+                <!-- 结束 第四部分: 服务器配置，发布时需找运维确定 -->
+               <example.log.path>d:\logs</example.log.path>
+                <!-- 开始 第五部分: 依赖的外部接口，发布时需找接口人确定 -->
+                <!-- 结束 第五部分: 依赖的外部接口，发布时需找接口人确定 -->
+
+                <!-- 开始 第六部分: 提供给别人的接口，发布时需通知调用人 -->
+                <!-- 结束 第六部分: 提供给别人的接口，发布时需通知调用人 -->
+
+                <!-- 开始 第七部分: 开发设置 -->
+
+                <!-- 开始 第七部分: 开发设置 -->
+
+
+                <!-- 开始 第八部分: 开发框架配置，发布人修改 -->
+                <!-- 结束 第八部分: 开发框架配置，发布人修改 -->
+            </properties>
+        </profile>
+
+
+        <profile>
+            <id>production</id>
+            <properties>
+                <!-- 开始 第一部分: 私密key配置，发布时需要运维配置，在product profile中去掉 -->
+
+                <!-- 结束 第一部分: 私密key配置，发布时需要运维配置，在product profile中去掉 -->
+
+                <!-- 开始 第二部分: 数据库配置，发布时需运维配置JNDI -->
+                <!--数据库连接的方式-->
+                <todo.jdbc.datasource.type>jndi</todo.jdbc.datasource.type>
+                <!-- 结束 第二部分: 数据库配置，发布时需运维配置JNDI -->
+
+                <!-- 开始 第三部分: 缓存等服务资源，发布时需找运维确定 -->
+                <!--cache1位置-->
+                <todo.memcached1.address>127.0.0.1:11211</todo.memcached1.address>
+                <!--cache2位置-->
+                <todo.memcached2.address>127.0.0.1:11211</todo.memcached2.address>
+
+                <!-- 结束 第三部分: 缓存等服务资源，发布时需找运维确定 -->
+
+                <!-- 开始 第四部分: 服务器配置，发布时需找运维确定 -->
+                <!-- 结束 第四部分: 服务器配置，发布时需找运维确定 -->
+
+                <!-- 开始 第五部分: 依赖的外部接口，发布时需找接口人确定 -->
+
+                <!-- 结束 第五部分: 依赖的外部接口，发布时需找接口人确定 -->
+
+                <!-- 开始 第六部分: 提供给别人的接口，发布时需通知调用人 -->
+                <!-- 结束 第六部分: 提供给别人的接口，发布时需通知调用人 -->
+
+                <!-- 开始 第七部分: 开发设置 -->
+                <!-- 开始 第七部分: 开发设置 -->
+
+                <!-- 开始 第八部分: 开发框架配置，发布人修改 -->
+            </properties>
+        </profile>
+    </profiles>
+</project>

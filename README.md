@@ -1,0 +1,3 @@
+memcache内容管理工具
+
+memcache的服务器配置信息存储在config.dat文件中，默认存储在在tomcat的bin目录下
